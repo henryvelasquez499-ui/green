@@ -117,7 +117,7 @@ export const UserForm: React.FC<UserFormProps> = ({
         <Button
           type="button"
           variant="outline"
-          onClick={() => setIsCreateModalOpen(false)}
+          onClick={() => {}}
         >
           Cancel
         </Button>

@@ -1,5 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import { Tag, Plus } from 'lucide-react'
 import { cn } from '../../utils/cn'
 
 interface BadgeProps {

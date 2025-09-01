@@ -1,9 +1,8 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { format } from 'date-fns'
-import { Calendar, Award, CheckCircle, Clock, XCircle } from 'lucide-react'
+import { Calendar, Award, CheckCircle, Clock, XCircle, Tag, Plus } from 'lucide-react'
 import { Card, CardContent } from '../ui/Card'
-import { Badge } from '../ui/Badge'
 
 interface ActionListProps {
   actions: any[]

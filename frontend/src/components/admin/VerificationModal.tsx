@@ -152,10 +152,7 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({
           <Button
             type="button"
             variant="outline"
-            onClick={() => {
-              setIsVerificationModalOpen(false)
-              setSelectedAction(null)
-            }}
+            onClick={() => {}}
           >
             Cancel
           </Button>
