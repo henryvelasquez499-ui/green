@@ -34,7 +34,7 @@ api.interceptors.response.use(
       
       if (refreshToken) {
         try {
-          const response = await authApi.refreshToken(refreshToken)
+          const response = await api.post('/auth/refresh', { refreshToken })
           useAuthStore.setState({ accessToken: response.accessToken })
           originalRequest.headers.Authorization = `Bearer ${response.accessToken}`
           return api(originalRequest)

@@ -1,13 +1,39 @@
 import { Pool, type PoolClient } from "pg"
 
+interface DatabaseConfig {
+  connectionString?: string
+  host?: string
+  port?: number
+  database?: string
+  user?: string
+  password?: string
+  ssl?: boolean | object
+  max?: number
+  idleTimeoutMillis?: number
+  connectionTimeoutMillis?: number
+}
+
 export class DatabaseManager {
   private static instance: DatabaseManager
   private pool: Pool
 
   private constructor() {
+    const config: DatabaseConfig = process.env.DATABASE_URL 
+      ? {
+          connectionString: process.env.DATABASE_URL,
+          ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+        }
+      : {
+          host: process.env.DB_HOST || 'localhost',
+          port: parseInt(process.env.DB_PORT || '5432'),
+          database: process.env.DB_NAME || 'greenloop',
+          user: process.env.DB_USER || 'postgres',
+          password: process.env.DB_PASSWORD || '',
+          ssl: false,
+        }
+
     this.pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+      ...config,
       max: 20,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 2000,

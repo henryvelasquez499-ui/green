@@ -100,6 +100,48 @@ export class TraditionalAuth {
     return jwt.sign({ userId, type: "refresh" }, process.env.JWT_SECRET!, { expiresIn: "7d" })
   }
 
+  async generatePasswordResetToken(userId: string): string {
+    return jwt.sign({ userId, type: "password_reset" }, process.env.JWT_SECRET!, { expiresIn: "1h" })
+  }
+
+  async generateVerificationToken(userId: string): string {
+    return jwt.sign({ userId, type: "email_verification" }, process.env.JWT_SECRET!, { expiresIn: "24h" })
+  }
+
+  async verifyPasswordResetToken(token: string): Promise<string> {
+    const payload = await this.verifyToken(token)
+    if (payload.type !== "password_reset") {
+      throw new Error("Invalid reset token")
+    }
+    return payload.userId
+  }
+
+  async verifyEmailToken(token: string): Promise<string> {
+    const payload = await this.verifyToken(token)
+    if (payload.type !== "email_verification") {
+      throw new Error("Invalid verification token")
+    }
+    return payload.userId
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 12)
+  }
+
+  async verifyPassword(password: string, userId: string): Promise<boolean> {
+    const [user] = await this.db.query("SELECT password_hash FROM users WHERE id = $1", [userId])
+    if (!user?.password_hash) return false
+    return bcrypt.compare(password, user.password_hash)
+  }
+
+  async updatePassword(userId: string, passwordHash: string): Promise<void> {
+    await this.db.query("UPDATE users SET password_hash = $1, updated_at = NOW() WHERE id = $2", [passwordHash, userId])
+  }
+
+  async invalidateRefreshToken(refreshToken: string): Promise<void> {
+    await this.db.query("DELETE FROM user_sessions WHERE session_token = $1", [refreshToken])
+  }
+
   async verifyToken(token: string) {
     try {
       return jwt.verify(token, process.env.JWT_SECRET!) as any

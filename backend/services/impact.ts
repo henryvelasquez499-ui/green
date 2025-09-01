@@ -1,9 +1,9 @@
 import { DatabaseManager } from "../config/database"
 
 export interface ImpactReport {
-  co2Saved: number
-  energySaved: number
-  waterSaved: number
+  co2Reduction: number
+  energyConservation: number
+  waterConservation: number
   totalActions: number
   period: string
 }
@@ -62,14 +62,14 @@ export class ImpactCalculator {
       [userId, timeframe.start, timeframe.end],
     )
 
-    const co2Saved = this.calculateCO2Reduction(actions)
-    const energySaved = this.calculateEnergyConservation(actions)
-    const waterSaved = this.calculateWaterConservation(actions)
+    const co2Reduction = this.calculateCO2Reduction(actions)
+    const energyConservation = this.calculateEnergyConservation(actions)
+    const waterConservation = this.calculateWaterConservation(actions)
 
     return {
-      co2Saved: Math.round(co2Saved * 100) / 100,
-      energySaved: Math.round(energySaved * 100) / 100,
-      waterSaved: Math.round(waterSaved * 100) / 100,
+      co2Reduction: Math.round(co2Reduction * 100) / 100,
+      energyConservation: Math.round(energyConservation * 100) / 100,
+      waterConservation: Math.round(waterConservation * 100) / 100,
       totalActions: actions.length,
       period: `${timeframe.start.toISOString().split("T")[0]} to ${timeframe.end.toISOString().split("T")[0]}`,
     }
